@@ -9,3 +9,4 @@ Template starts with:
 * Toggle for Locking Window.
 * Toggle for Auto Resizing the Window.
 * Basic Config setup and some settings.
+* Basic Bind Setup for /commands

@@ -149,6 +149,9 @@ local function Draw_GUI()
 					-- Toggle Config Window
 					showConfigGUI = not showConfigGUI
 				end
+				if ImGui.MenuItem ("Exit") then
+					RUNNING = false
+				end
 				ImGui.EndPopup()
 			end
 
@@ -255,11 +258,31 @@ local function Draw_GUI()
 
 end
 
+-- binds function to process commands and arugments
+local function binds(...)
+	local args = {...}
+	if args[1] == "gui" then
+		showMainGUI = not showMainGUI
+	end
+	if args[1] == "config" then
+		showConfigGUI = not showConfigGUI
+	end
+	if args[1] == "exit" then
+		RUNNING = false
+	end
+end
+
 local function Init()
 	-- Load Settings
 	loadSettings()
 	-- Get Character Name
 	meName = mq.TLO.Me.Name()
+	-- setup bind
+	mq.bind("/"..script, binds)
+	printf("\aw[\at%s\ax] \ayLoaded!", script)
+	printf("\aw[\at%s\ax] \ayType \ag/%s gui\ay to toggle the GUI", script, script)
+	printf("\aw[\at%s\ax] \ayType \ag/%s config\ay to toggle the Config GUI", script, script)
+	printf("\aw[\at%s\ax] \ayType \ag/%s exit\ay to exit the script", script, script)
 	-- Check if ThemeZ exists
 	if File_Exists(themezDir) then
 		hasThemeZ = true
@@ -271,7 +294,6 @@ end
 local function Loop()
 	-- Main Loop
 	while RUNNING do
-		RUNNING = showMainGUI
 		-- Make sure we are still in game or exit the script.
 		if mq.TLO.EverQuest.GameState() ~= "INGAME" then printf("\aw[\at%s\ax] \arNot in game, \ayTry again later...", script) mq.exit() end
 
@@ -279,7 +301,7 @@ local function Loop()
 		winFlags = locked and bit32.bor(ImGuiWindowFlags.NoMove) or bit32.bor(ImGuiWindowFlags.None)
 		winFlags = aSize and bit32.bor(winFlags, ImGuiWindowFlags.AlwaysAutoResize) or winFlags
 
-		mq.delay(1000) -- delay 1 second
+		mq.delay(10) 
 
 	end
 end
